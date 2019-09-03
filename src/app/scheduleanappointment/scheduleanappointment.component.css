@@ -1,0 +1,12 @@
+.card-header {
+  background-color: gainsboro;
+-webkit-text-fill-color: black;
+
+}
+.modal-content {
+  width: max-content;
+}
+
+hr{
+  border-top: 1px solid #f8f9fa;
+}
