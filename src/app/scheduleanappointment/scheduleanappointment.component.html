@@ -1,134 +1,143 @@
 <div>
-<mat-tab-group animationDuration="0ms">
-  <mat-tab label="Demographics">
+  <mat-tab-group animationDuration="0ms">
+    <mat-tab label="Demographics">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-10">
 
+            <div class="card text-white bg-secondary mb-3">
+              <div class="card-header">Enter Patient Informartion</div>
+              <div class="card-body">
+                <form [formGroup]="details">
+                    <div class="form-group row">
 
-<div class="modal-body">
-  <div class="row">
-    <div class="col-sm-10">
-      <div class="card text-white bg-secondary mb-3">
-        <div class="card-header">Enter Patient Informartion</div>
-        <div class="card-body">
-          <form [formGroup]="details">
-            <div class="form-group row">
+                      <div class="form-group col-md-2">
+                        <label>Patient Name</label>
+                        <input  formControlName="patientname"  type="text" class="form-control" placeholder="Patient name"  >
+                        <label class="alert alert-danger" *ngIf="details.get('patientname').hasError('required') && !details.get('patientname').pristine" >This field is required.</label>
+                      </div>
 
-              <div class="form-group col-md-2">
-                <label>Patient Name</label>
-                <input  formControlName="patientname" type="text" class="form-control" placeholder="Patient name" >
-                <label class="alert alert-danger" *ngIf="details.get('patientname').hasError('required') && !details.get('patientname').pristine">
-                    Name is Required
-                </label>
-              </div>
+                      <div class="form-group col-md-2">
+                        <label>Patient DOB</label>
+                        <div>
+                          <input type="date" name="bday">
+                        </div>
+                      </div>
 
-              <div class="form-group col-md-2">
-                <label>Patient DOB</label>
-                <input type="date" name="bday">
-              </div>
+                      <div class="form-group col-md-2">
+                        <label>Phone</label>
+                        <!-- <input formControlName="phone" type="text" class="form-control"> -->
+                        <input id="tel" class="form-control" phoneMask [preValue]="details.value.phone"  [phoneControl]="details.controls['phone']" formControlName="phone" maxlength="14"
+                        [ngClass]="(details.controls['phone'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
+                      </div>
 
-              <div class="form-group col-md-2">
-                <label>Phone</label>
-                <input formControlName="phone" type="text" class="form-control">
-              </div>
+                      <div class="form-group col-md-2">
+                        <label>Email</label>
+                        <input formControlName="email" type="text" class="form-control" placeholder="Email">
+                        <label class="alert alert-danger"  *ngIf="details.get('email').hasError('email')">Email is invalid.</label>
+                      </div>
 
-              <div class="form-group col-md-2">
-                <label>Email</label>
-                <input formControlName="email" type="text" class="form-control" placeholder="Email">
-              </div>
+                      <div class="form-group col-md-2">
+                        <!-- <a class="btn btn-primary btnprocessing" style="margin-top: 25px;" *ngIf="!isActive" (click)=openEdit(content,i)>Continue</a> -->
+                        <button type="submit" class="btn btn-primary btn-continue" style="margin-top: 30px;" *ngIf="!checked" (click)=openEdit(content,i)>continue</button>
+                      </div>
 
-              <div class="form-group col-md-2">
-                <button type="submit" class="btn btn-info" *ngIf="!isActive"  (click)=openEdit(content,i)>continue</button>
+                    </div>
+                  </form>
+<!--........................................................................Caller details........................................................................................ -->
+                  <div>Caller Details</div>
+                  <hr color="white">
+                  <div class="card-body">
+                    <form [formGroup]="callerdetails">
+                      <div class="form-group row">
+
+                        <div class="form-group col-md-2">
+                          <label>Name</label>
+                          <input  formControlName="callername" type="text" class="form-control" placeholder="Caller Name">
+                          <label class="alert alert-danger" *ngIf="callerdetails.get('callername').hasError('required') && !callerdetails.get('callername').pristine" >This field is required.</label>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                          <label>Phone</label>
+                          <input id="tel" class="form-control" phoneMask [preValue]="callerdetails.value.phoneno"  [phoneControl]="callerdetails.controls['phoneno']" formControlName="phoneno" maxlength="14"
+                          [ngClass]="(callerdetails.controls['phoneno'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
+                          <label class="alert alert-danger" *ngIf="callerdetails.get('phoneno').hasError('required') && !callerdetails.get('phoneno').pristine" >This field is required.</label>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label >Relationship to Patient</label>
+                          <div>
+                            <input type="text" [formControl]="control" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                              <mat-option *ngFor="let relation of filteredRelation | async" [value]="relation">{{relation}}</mat-option>
+                            </mat-autocomplete>
+                          </div>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <div class="check1">
+                            <!-- <input type="checkbox" style="margin-top: 25px;" (click)="onCheck()" formControlName="checkBoxCall" >Call patient to book Appointments -->
+                            <input type="checkbox" style="margin-top: 25px;" data-md-icheck (change)="addprop1($event)">Call patient to book Appointments?
+                          </div>
+                        </div>
+
+                        <div class="finish1">
+                          <button type="submit" style="margin-top: 30px;" class="btn btn-warning btn-finishs" *ngIf="checked">Finish</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
               </div>
             </div>
-          </form>
-          <div>Caller Details</div>
-          <hr color="white">
-          <div class="card-body">
-            <form [formGroup]="callerdetails">
-              <div class="form-group row">
-
-                <div class="form-group col-md-2">
-                  <label>Name</label>
-                  <input  formControlName="callername" type="text" class="form-control" placeholder="Caller Name">
-                </div>
-
-                <div class="form-group col-md-2">
-                  <label>Phone</label>
-                  <input formControlName="phoneno" type="text" class="form-control" placeholder="Phone no.">
-                </div>
-
-                <div class="form-group col-md-2">
-                  <label>Relationship to Patient</label>
-                  <mat-form-field>
-                    <!-- <mat-label>Select</mat-label> -->
-                    <mat-select >
-                      <mat-option>Select</mat-option>
-                      <mat-option value="option1">Child</mat-option>
-                      <mat-option value="option2">Parent</mat-option>
-                      <mat-option value="option3">Self</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-
-              <input type="checkbox"  (click)="onCheck()"  *ngIf="onCheck">Call patient to book Appointments
-              <div class="form-group col-md-2">
-                  <button type="submit" class="btn btn-success" *ngIf="isActive">Finish</button>
-                </div>
-              </div>
-            </form>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-</mat-tab>
-<mat-tab label="Insurance">
-  <h1>Insurance</h1>
-</mat-tab>
-<mat-tab label="Appointments">
-  <h1>Appointments </h1>
-</mat-tab>
-<mat-tab label="Referral Source">
-  <h1>Referral Source </h1>
-</mat-tab>
-<mat-tab label="Documents">
-  <h1>Documents </h1>
-</mat-tab>
-<mat-tab label="Care Team">
-  <h1>Care Team </h1>
-</mat-tab>
-<mat-tab label="Appointment Memo">
-  <h1>Appointment Memo </h1>
-</mat-tab>
-</mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Insurance">
+      <h1>Insurance</h1>
+    </mat-tab>
+    <mat-tab label="Appointments">
+      <h1>Appointments </h1>
+    </mat-tab>
+    <mat-tab label="Referral Source">
+      <h1>Referral Source </h1>
+    </mat-tab>
+    <mat-tab label="Documents">
+      <h1>Documents </h1>
+    </mat-tab>
+    <mat-tab label="Care Team">
+      <h1>Care Team </h1>
+    </mat-tab>
+    <mat-tab label="Appointment Memo">
+      <h1>Appointment Memo </h1>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 
-
+<!-- .............................................................................Patient Information...................................................................... -->
 <ng-template #content let-modal>
-    <!-- <div class="model-content" style="width:max-content"> -->
-    <div class="modal-dialog modal-xl" class="modal-content">
-      <!-- <div class="modal-content"> -->
-      <div class="modal-header">
-        <h5 class="modal-title" id="modal-basic-title">Patient Information</h5>
-        <button type="button" class="close bg bg-danger" aria-label="Close" (click)="modal.dismiss('Cross click')">
-          <span aria-hidden="true">Close</span>
-        </button>
-      </div>
+  <div class="modal-dialog modal-xl" class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Patient Information</h5>
+      <button type="button" class="close bg bg-danger" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">Close</span>
+      </button>
+    </div>
 
-      <div class="modal-body">
-
-        <div class="row">
-
-          <div class="col-sm-6">
+    <div class="modal-body">
+      <div class="row">
+<!-- .........................................................................General Informartion............................................................................. -->
+        <div class="col-sm-6">
             <div class="card text-white bg-secondary mb-3">
-              <div class="card-header">General Informartion</div>
-              <hr>
               <div class="card-body">
-                <form [formGroup]="general" (ngSubmit)="onUserSave()">
+                <div>General Informartion</div>
+                <hr>
+                <form [formGroup]="general">
                   <div class="form-group row">
                     <div class="form-group col-md-4">
                       <label>First Name</label>
                       <input formControlName="firstname" type="text" class="form-control">
+                      <label class="alert alert-danger" *ngIf="general.get('firstname').hasError('required') && !general.get('firstname').pristine" >This field is required.</label>
                     </div>
                     <div class="form-group col-md-4">
                       <label>Middle Name</label>
@@ -137,16 +146,18 @@
                     <div class="form-group col-md-4">
                       <label>Last Name</label>
                       <input formControlName="lastname" type="text" class="form-control">
+                      <label class="alert alert-danger" *ngIf="general.get('lastname').hasError('required') && !general.get('lastname').pristine" >This field is required.</label>
                     </div>
                   </div>
                   <div class="form-group row">
                     <div class="form-group col-md-4">
                       <label>DOB</label>
-                      <input formControlName="dob" type="text" class="form-control">
+                      <input formControlName="dob" type="date" class="form-control">
                     </div>
                     <div class="form-group col-md-4">
                       <label>Gender</label>
                       <input formControlName="gender" class="form-control" type="text" list="genders">
+                      <label class="alert alert-danger" *ngIf="general.get('gender').hasError('required') && !general.get('gender').pristine" >This field is required.</label>
                       <datalist id="genders">
                         <option value="Select">
                         <option value="Female">
@@ -158,14 +169,14 @@
                 </form>
               </div>
             </div>
-          </div>
-
-          <div class="col-sm-6">
+        </div>
+<!-- ..........................................................................Address Information.............................................................................. -->
+        <div class="col-sm-6">
             <div class="card text-white bg-secondary mb-3">
-              <div class="card-header">Address Information</div>
-              <hr>
               <div class="card-body">
-                <form [formGroup]="address" (ngSubmit)="onUserSave()">
+                <div>Address Information</div>
+                <hr>
+                <form [formGroup]="address">
                   <div class="form-group row">
                     <div class="form-group col-md-4">
                       <label>Address 1</label>
@@ -205,36 +216,40 @@
                 </form>
               </div>
             </div>
-          </div>
         </div>
 
-
-        <div class="row">
-
-          <div class="col-sm-6">
+      </div>
+      <div class="row">
+<!-- ..........................................................................Contact Information............................................................................. -->
+      <div class="col-sm-6">
             <div class="card text-white bg-secondary mb-3">
-              <div class="card-header">Contact Information</div>
-              <hr>
               <div class="card-body">
-                <form [formGroup]="contact" (ngSubmit)="onUserSave()">
+                <div>Contact Information</div>
+                <hr>
+                <form [formGroup]="contact">
                   <div class="form-group row">
                     <div class="form-group col-md-4">
                       <label>Home #</label>
-                      <input formControlName="home" type="text" class="form-control">
+                      <input id="tel" class="form-control" phoneMask [preValue]="contact.value.home"  [phoneControl]="contact.controls['home']" formControlName="home" maxlength="14"
+                      [ngClass]="(contact.controls['home'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
                     </div>
                     <div class="form-group col-md-4">
                       <label>Cell #</label>
-                      <input formControlName="cell" type="text" class="form-control">
+                      <input id="tel" class="form-control" phoneMask [preValue]="contact.value.cell"  [phoneControl]="contact.controls['cell']" formControlName="cell" maxlength="14"
+                      [ngClass]="(contact.controls['cell'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
                     </div>
                     <div class="form-group col-md-4">
                       <label>Work Phone #</label>
-                      <input formControlName="workphone" type="text" class="form-control">
+                      <input id="tel" class="form-control" phoneMask [preValue]="contact.value.workphone"  [phoneControl]="contact.controls['workphone']" formControlName="workphone" maxlength="14"
+                      [ngClass]="(contact.controls['workphone'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
                     </div>
                   </div>
+
                   <div class="form-group row">
                     <div class="form-group col-md-4">
                       <label>Email</label>
                       <input formControlName="email" type="text" class="form-control">
+                      <label class="alert alert-danger"  *ngIf="contact.get('email').hasError('email')">Email is invalid.</label>
                     </div>
                     <div class="form-group col-md-4">
                       <label>Preferred Mode of Contact</label>
@@ -251,13 +266,13 @@
               </div>
             </div>
           </div>
-
+<!-- ..........................................................................Other Information............................................................................... -->
           <div class="col-sm-6">
             <div class="card text-white bg-secondary mb-3">
-              <div class="card-header">Other Information</div>
-              <hr>
               <div class="card-body">
-                <form [formGroup]="other" (ngSubmit)="onUserSave()">
+                <div>Other Information</div>
+                <hr>
+                <form [formGroup]="other">
                   <div class="form-group row">
                     <div class="form-group col-md-6">
                       <label>SSN</label>
@@ -277,14 +292,10 @@
                       </datalist>
                     </div>
                   </div>
-                  <!-- <div class="form-group row">
-                     <p>Authorization to contact patient</p>
-                    </div> -->
-
-                    <p>Authorization to contact patient</p>
-                    <hr>
-
-                    <div class="form-group row">
+<!-- ......................................................................Authorization to contact patient................................................................... -->
+                  <p>Authorization to contact patient</p>
+                  <hr>
+                  <div class="form-group row">
                     <div>
                         <mat-checkbox>Email</mat-checkbox>&nbsp;&nbsp;
                     </div>
@@ -299,10 +310,8 @@
               </div>
             </div>
           </div>
-        </div>
-
       </div>
 
     </div>
-
-  </ng-template>
+  </div>
+</ng-template>

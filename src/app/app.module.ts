@@ -5,17 +5,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSelectModule} from '@angular/material/select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 import { AppComponent } from './app.component';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScheduleanappointmentComponent } from './scheduleanappointment/scheduleanappointment.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import { PhoneMaskDirective } from './scheduleanappointment/phone-mask.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
 
-    ScheduleanappointmentComponent
+    ScheduleanappointmentComponent,
+    PhoneMaskDirective
 
   ],
   imports: [
@@ -27,7 +30,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     BrowserAnimationsModule,
     MatCheckboxModule,
     MatSelectModule,
-    MatTabsModule
+    MatTabsModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent]

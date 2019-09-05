@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-
+import { Observable } from 'rxjs';
+import {startWith, map} from 'rxjs/operators';
 @Component({
   selector: 'app-scheduleanappointment',
   templateUrl: './scheduleanappointment.component.html',
@@ -17,6 +18,10 @@ export class ScheduleanappointmentComponent implements OnInit {
   other: FormGroup;
   closeResult: string;
   isActive:Boolean=false;
+  control = new FormControl();
+  relations: string[] = ['Child', 'Parent', 'Self', 'Spouse','Aunt','Cousin','Former Spouse','Grandchild','Inlaw','Niece/Nephew'];
+  filteredRelation: Observable<string[]>;
+
   constructor(private fb: FormBuilder,private modalService: NgbModal) { }
 
   ngOnInit() {
@@ -24,21 +29,21 @@ export class ScheduleanappointmentComponent implements OnInit {
     this.details=this.fb.group({
       patientname:new FormControl(null,Validators.required),
       patientDOB:new FormControl(null),
-      phone:new FormControl(null),
-      email:new FormControl(null)
+      phone:new FormControl('',[Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      email:new FormControl(null,[Validators.required,Validators.email])
     });
 
     this.callerdetails=this.fb.group({
-      callername:new FormControl(null),
-      phoneno:new FormControl(null)
+      callername:new FormControl(null,Validators.required),
+      phoneno:new FormControl('',[Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/),Validators.required])
     });
 
     this.general=this.fb.group({
-      firstname:new FormControl(null),
+      firstname:new FormControl(null,Validators.required),
       middlename:new FormControl(null),
-      lastname:new FormControl(null),
+      lastname:new FormControl(null,Validators.required),
       dob:new FormControl(null),
-      gender: new FormControl(null)
+      gender: new FormControl(null,Validators.required)
     });
 
     this.address=this.fb.group({
@@ -50,10 +55,10 @@ export class ScheduleanappointmentComponent implements OnInit {
     });
 
     this.contact=this.fb.group({
-      home:new FormControl(null),
-      cell:new FormControl(null),
-      workphone:new FormControl(null),
-      email:new FormControl(null),
+      home:new FormControl('',[Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      cell:new FormControl('',[Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      workphone:new FormControl('',[Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      email:new FormControl(null,[Validators.required,Validators.email]),
       mode:new FormControl(null)
     });
 
@@ -62,29 +67,36 @@ export class ScheduleanappointmentComponent implements OnInit {
       language:new FormControl(null)
     });
 
+    this.filteredRelation = this.control.valueChanges.pipe(
+      startWith(''),
+  map(value => this._filter(value))
+    );
+
   }
 
   openEdit(content, i) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+
+
+    this.modalService.open(content, {size:'xl'});
   }
 
-  // modal
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
+  private _filter(value: string): string[] {
+    const filterValue = this._normalizeValue(value);
+    return this.relations.filter(relation => this._normalizeValue(relation).includes(filterValue));
+  }
+
+  private _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+
+  checked:boolean = false;
+
+  addprop1(e){
+      if(e.target.checked){
+        this.checked = true;
+      }else{
+        this.checked = false;
+      }
     }
-  }
-  onCheck()
-  {
-    this.isActive=true;
-  }
 
 }
